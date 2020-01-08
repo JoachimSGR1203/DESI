@@ -3,6 +3,8 @@ import os, tkinter, tkinter.filedialog, tkinter.messagebox
 import pandas as pd
 import matplotlib.pyplot as plt
 import tkinter as tk
+from matplotlib.colors import LogNorm
+
 
 mz_counter = 0 # 何番目の質量数を表示するかのカウンター
 mz_num = [] # 選択された質量数が何番目かを示す（最大３つまで）
@@ -72,7 +74,7 @@ def draw_multimap():
     mz_num_min = max(len(mz_num)-3,0)
 
     for i in range(mz_num_min,len(mz_num)):
-        z = df.iloc[3:,mz_num[i]+2]
+        z = df.iloc[3:,mz_num[i]+2] + 0.01
         zz = z.values.reshape(y_point, x_point)
 
         fig = plt.figure(figsize=(x_point/10, y_point/10))
@@ -81,7 +83,13 @@ def draw_multimap():
         ax1.set_title(df.iat[2,mz_num[i]+2])
         plt.axis([x_start, x_end, y_end, y_start])
 
-        plt.contourf(xx, yy, zz, levels=10, cmap='CMRmap')
+        if bln.get():
+            plt.contourf(xx, yy, zz, levels=10, cmap='CMRmap', norm=LogNorm())
+            plt.colorbar(orientation="vertical")
+        else:
+            plt.contourf(xx, yy, zz, levels=10, cmap='CMRmap')
+            plt.colorbar(orientation="vertical")
+
         plt.show()
 
 
@@ -117,6 +125,11 @@ EditBox2.insert(tkinter.END,"0.2")
 EditBox2.place(x=115, y=110)
 Static3 = tk.Label(text=u'mm')
 Static3.place(x=145,y=110)
+
+bln = tkinter.BooleanVar()
+bln.set(False)
+CheckBox1 = tkinter.Checkbutton(variable=bln, text=u"log scale")
+CheckBox1.place(x=5, y=140)
 
 show_mz(0)
 
