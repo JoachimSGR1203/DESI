@@ -142,8 +142,44 @@ b_down.place(x=250, y=30)
 #b1 = tkinter.Button(text='質量選択', command=get_mz_num)
 #b1.place(x=5,y=150)
 
+# 値を格納するオブジェクト
+flag = tk.BooleanVar()
+flag.set(False)
+v = tk.IntVar()
+v.set(0)
+
+# ラジオボタンを格納
+buttons = []
+
+# ボタンの状態を変更
+def change_state():
+    if flag.get():
+        new_state = 'normal'
+    else:
+        new_state = 'disabled'
+    for b in buttons:
+        b.configure(state = new_state)
+
+# チェックボタン
+cb = tk.Checkbutton(root2, text = 'line profile', variable = flag, command = change_state)
+
+# ラベルフレーム
+f = tk.LabelFrame(root2, labelwidget = cb)
+
+bb0 = tk.Radiobutton(f, text = 'vertical line', value = 0, variable = v, state = 'disabled')
+bb1 = tk.Radiobutton(f, text = 'holizontal line', value = 1, variable = v, state = 'disabled')
+
+bb0.pack()
+bb1.pack()
+
+buttons.append(bb0)
+buttons.append(bb1)
+
+#f.pack(padx = 5, pady = 190)
+f.place(x=5, y=160)
+
 b2 = tkinter.Button(text='処理開始', command=draw_multimap)
-b2.place(x=5, y=180)
+b2.place(x=5, y=250)
 
 root2.mainloop()
 
